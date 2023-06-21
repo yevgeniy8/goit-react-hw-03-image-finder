@@ -1,5 +1,18 @@
 import { Component } from 'react';
 
+import Notiflix from 'notiflix';
+
+import PropTypes from 'prop-types';
+
+import {
+    Header,
+    SearchForm,
+    SearchFormButton,
+    // Label,
+    Input,
+    StyledIcon,
+} from './Searchbar.styled';
+
 class Searchbar extends Component {
     state = {
         text: '',
@@ -13,6 +26,10 @@ class Searchbar extends Component {
 
     handleSubmit = evt => {
         evt.preventDefault();
+        if (this.state.text.trim() === '') {
+            Notiflix.Notify.failure('Введите что то в поиск');
+            return;
+        }
         this.props.onSubmit(this.state.text);
         this.setState({
             text: '',
@@ -21,14 +38,14 @@ class Searchbar extends Component {
 
     render() {
         return (
-            <header className="searchbar">
-                <form className="form" onSubmit={this.handleSubmit}>
-                    <button type="submit" className="button">
-                        <span className="button-label">Search</span>
-                    </button>
+            <Header>
+                <SearchForm onSubmit={this.handleSubmit}>
+                    <SearchFormButton type="submit">
+                        {/* <Label>Search</Label> */}
+                        <StyledIcon />
+                    </SearchFormButton>
 
-                    <input
-                        className="input"
+                    <Input
                         type="text"
                         autoComplete="off"
                         autoFocus
@@ -36,10 +53,14 @@ class Searchbar extends Component {
                         value={this.state.text}
                         onChange={this.handleChange}
                     />
-                </form>
-            </header>
+                </SearchForm>
+            </Header>
         );
     }
 }
+
+Searchbar.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+};
 
 export default Searchbar;
